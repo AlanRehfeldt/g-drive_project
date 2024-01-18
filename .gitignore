@@ -7,3 +7,5 @@ script.md
 .env
 /build
 /src/env
+/database/app.db
+/database/.DS_Store
