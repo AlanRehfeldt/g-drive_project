@@ -3,20 +3,20 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
-    client: 'sqlite3',
-    connection: {
-        filename: './database/app.db'
-    },
-  // client: 'pg',
-  // connection: {
-  //   connectionString: process.env.DATABASE_URL,
-  //   host: process.env.HOST,
-  //   port: process.env.DATABASE_PORT,
-  //   user: process.env.USER,
-  //   database: process.env.DATABASE,
-  //   password: process.env.PASSWORD,
-  //   ssl: false,
-  // }, 
+    // client: 'sqlite3',
+    // connection: {
+    //     filename: './database/app.db'
+    // },
+  client: 'pg',
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    host: process.env.HOST,
+    port: process.env.DATABASE_PORT,
+    user: process.env.USER,
+    database: process.env.DATABASE,
+    password: process.env.PASSWORD,
+    ssl: false,
+  }, 
     useNullAsDefault: true,
     migrations: {
         directory: './database/migrations',
