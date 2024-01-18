@@ -3,3 +3,7 @@ node_modules
 
 # Other
 script.md
+
+.env
+/build
+/src/env
