@@ -11,4 +11,6 @@ foldersRouter.use(ensureAuthenticated);
 foldersRouter.post("/", foldersController.create);
 foldersRouter.put("/:id", foldersController.update);
 foldersRouter.get("/", foldersController.list);
+foldersRouter.get("/:id", foldersController.list);
 foldersRouter.get("/shared/", foldersController.listShared);
+foldersRouter.get("/shared/:id", foldersController.listShared);

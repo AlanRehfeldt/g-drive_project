@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { knex } from "../database";
+import { IDataReturn } from "../@types/IDataReturn";
 import { randomUUID } from "crypto";
 import { verify } from "jsonwebtoken";
 import authConfig from "../configs/auth";
@@ -96,7 +97,7 @@ export class FoldersController {
     }
 
     async list(req: Request, res: Response) {
-        const path = req.query.path as string
+        const { id } = req.params
         const { token } = req.cookies;
 
         try {
@@ -104,6 +105,34 @@ export class FoldersController {
             const sessionUserId = payload.sub
             const sessionUser = await knex("users").where("id", sessionUserId).first();
 
+            if(!id) {
+                const folders = await knex("folders")
+                    .where({
+                        user_id: sessionUserId,
+                        path: "home"
+                    })
+
+                const files = await knex("files")
+                    .where({
+                        user_id: sessionUserId,
+                        path: "home"
+                    })
+
+                let dataReturn: Array<IDataReturn> = []
+                folders.map(folder => dataReturn.push(folder))
+                files.map(file => dataReturn.push(file))
+
+                return res.status(200).json({ dataReturn })
+            }
+
+            const folder = await knex("folders").where("id", id).first();
+            if(!folder) {
+                return res.status(400).json({
+                    message: "folder does not exists"
+                })
+            }
+
+            const path = folder.path + "-" + folder.name
             let folders
             let files
 
@@ -124,17 +153,6 @@ export class FoldersController {
                     })
             }
 
-            interface IDataReturn {
-                id: string;
-                name: string;
-                path: string;
-                extension?: string;
-                size?: number;
-                user_id: string;
-                created_at: string;
-                updated_at: string;
-            }
-
             let dataReturn: Array<IDataReturn> = []
             folders.map(folder => dataReturn.push(folder))
             files.map(file => dataReturn.push(file))
@@ -149,7 +167,7 @@ export class FoldersController {
     }
 
     async listShared(req: Request, res: Response) {
-        const path = req.query.path as string
+        const { id } = req.params
         const { token } = req.cookies;
 
         try {
@@ -157,22 +175,18 @@ export class FoldersController {
             const sessionUserId = payload.sub
             const sessionUser = await knex("users").where("id", sessionUserId).first();
 
+            if(!id) {
+                const sharedFolders = await knex("folders_permission")
+                    .where({
+                        user_id: sessionUserId,
+                    })
+            }
+
             let folders
             let files
 
             let sharedFolders
             let sharedFiles
-
-            interface IDataReturn {
-                id: string;
-                name: string;
-                path: string;
-                extension?: string;
-                size?: number;
-                user_id: string;
-                created_at: string;
-                updated_at: string;
-            }
 
             let dataReturn: Array<IDataReturn> = []
 
