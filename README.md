@@ -1,5 +1,5 @@
 <h1 align="center">
-  Rocketnotes API
+  G-Drive API
 </h1>
 
 <p align="center">
